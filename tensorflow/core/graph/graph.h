@@ -65,6 +65,10 @@ class NodeIter;      // Declared below
 
 class Node {
  public:
+  //Ignore Gate Declaration
+  bool ignore = false;
+  void setIgnore(){this.ignore = true;}
+  bool getIgnore(){return this.ignore;}
   string DebugString() const;
   int id() const { return id_; }
   int cost_id() const { return cost_id_; }

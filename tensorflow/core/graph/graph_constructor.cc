@@ -595,7 +595,7 @@ Status ImportGraphDef(const ImportGraphDefOptions& opts, const GraphDef& gdef,
   }
   return GraphConstructor::Construct(opts, &gdef, g, refiner);
 }
-
+//[BW] implementation of the ignore purge on copy
 void CopyGraph(const Graph& src, Graph* dest) {
   for (Node* n : dest->nodes()) {
     CHECK(n->IsSource() || n->IsSink()) << "*dest must be empty";
@@ -612,14 +612,24 @@ void CopyGraph(const Graph& src, Graph* dest) {
   for (Node* n : src.nodes()) {
     if (n->IsSource() || n->IsSink()) continue;
     CHECK(n->IsOp());
-    node_map[n] = dest->CopyNode(n);
+    if(!(node_map[n].getIgnore())){
+      node_map[n] = dest->CopyNode(n);
+    }
+    else{
+      //Do not copy this node, as it is an ignored node
+    }
   }
 
   // Copy the edges
   for (const Edge* e : src.edges()) {
     Node* src_copy = node_map[e->src()];
     Node* dst_copy = node_map[e->dst()];
-    dest->AddEdge(src_copy, e->src_output(), dst_copy, e->dst_input());
+    if(!(src_copy->getIgnore()) && !(src_dest->getIgnore())){
+      dest->AddEdge(src_copy, e->src_output(), dst_copy, e->dst_input());
+    }
+    else{
+      //Ignore this edge, as it references an ignored node
+    }
   }
 }
 
