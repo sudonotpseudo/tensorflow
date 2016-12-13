@@ -288,6 +288,10 @@ class Graph {
   // REQUIRES: node->IsOp()
   void RemoveNode(Node* node);
 
+  // Mark a node as something that should be ignored and removed upon next lookup
+  // Any of the nodes my be accessed after calling this function until the next lookup
+  void MarkIgnored(Node** nodes);
+
   // Add an edge that connects the xth output of "source" to the yth input
   // of "dest".
   const Edge* AddEdge(Node* source, int x, Node* dest, int y);

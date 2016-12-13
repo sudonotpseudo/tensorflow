@@ -326,6 +326,14 @@ void Graph::RemoveEdge(const Edge* e) {
   free_edges_.push_back(del);
 }
 
+void Graph::MarkIgnored(const String[] names){
+  for (Node* node : this->nodes_) {
+    if (names.contains(node->name()) {
+      node->setIgnore();
+    }
+  }
+}
+
 namespace {
 
 void AddInput(NodeDef* dst, StringPiece src_name, int src_slot) {
