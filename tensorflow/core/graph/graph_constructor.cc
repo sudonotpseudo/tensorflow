@@ -595,8 +595,35 @@ Status ImportGraphDef(const ImportGraphDefOptions& opts, const GraphDef& gdef,
   }
   return GraphConstructor::Construct(opts, &gdef, g, refiner);
 }
-//[BW] implementation of the ignore purge on copy
+
 void CopyGraph(const Graph& src, Graph* dest) {
+  for (Node* n : dest->nodes()) {
+    CHECK(n->IsSource() || n->IsSink()) << "*dest must be empty";
+  }
+
+  // Copy GraphDef versions
+  dest->set_versions(src.versions());
+
+  // Copy the nodes
+  std::unordered_map<Node*, Node*>
+      node_map;  // "Node in src" -> "Node in *dest"
+  node_map[src.source_node()] = dest->source_node();
+  node_map[src.sink_node()] = dest->sink_node();
+  for (Node* n : src.nodes()) {
+    if (n->IsSource() || n->IsSink()) continue;
+    CHECK(n->IsOp());
+    node_map[n] = dest->CopyNode(n);
+  }
+
+  // Copy the edges
+  for (const Edge* e : src.edges()) {
+    Node* src_copy = node_map[e->src()];
+    Node* dst_copy = node_map[e->dst()];
+    dest->AddEdge(src_copy, e->src_output(), dst_copy, e->dst_input());
+  }
+}
+//[BW] implementation of the ignore purge on copy
+void AmnesiaCopyGraph(const Graph& src, Graph* dest) {
   for (Node* n : dest->nodes()) {
     CHECK(n->IsSource() || n->IsSink()) << "*dest must be empty";
   }
