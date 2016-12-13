@@ -91,6 +91,11 @@ extern Status ImportGraphDef(const ImportGraphDefOptions& opts,
 // other than the implicit Source/Sink nodes.
 extern void CopyGraph(const Graph& src, Graph* dest);
 
+// Make an amnesia copy of "src" into "*dest".
+//
+// REQUIRES: "*dest" is a freshly allocated graph without any nodes or edges
+// other than the implicit Source/Sink nodes.
+extern void AmnesiaCopyGraph(const Graph& src, Graph* dest)
 }  // namespace tensorflow
 
 #endif  // TENSORFLOW_GRAPH_GRAPH_CONSTRUCTOR_H_
