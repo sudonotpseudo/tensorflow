@@ -95,7 +95,7 @@ extern void CopyGraph(const Graph& src, Graph* dest);
 //
 // REQUIRES: "*dest" is a freshly allocated graph without any nodes or edges
 // other than the implicit Source/Sink nodes.
-extern void AmnesiaCopyGraph(const Graph& src, Graph* dest)
+extern void AmnesiaCopyGraph(const Graph& src, Graph* dest);
 }  // namespace tensorflow
 
 #endif  // TENSORFLOW_GRAPH_GRAPH_CONSTRUCTOR_H_
